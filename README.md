@@ -1,58 +1,77 @@
-<?php
+# Github Issue Action
 
-require_once 'vendor/autoload.php';
-Requests::register_autoloader();
 
-// var_dump($argv);
-// var_dump($_ENV);
 
-echo "::debug ::Sending a request to slack\n";
+This action opens a new github issue.
 
-$response = Requests::post(
-    $_ENV['INPUT_SLACK_WEBHOOK'],
-    array(
-        'Content-type' => 'application/json'
-    ),
-    json_encode(array (
-        'blocks' => 
-            array (
-                array (
-                    "type" => "section",
-                    "text" => array (
-                        "type" => "mrkdwn",
-                        "text" => $_ENV['INPUT_MESSAGE'],
-                    ),
-                ),
-                array (
-                    "type" => "section",
-                    "fields" => array (
-                        array (
-                            "type" => "mrkdwn",
-                            "text" => "*Repository:*\n{$_ENV['GITHUB_REPOSITORY']}",
-                        ),
-                        array (
-                            "type" => "mrkdwn",
-                            "text" => "*Event:*\n{$_ENV['GITHUB_EVENT_NAME']}",
-                        ),
-                        array (
-                            "type" => "mrkdwn",
-                            "text" => "*Ref:*\n{$_ENV['GITHUB_REF']}",
-                        ),
-                        array (
-                            "type" => "mrkdwn",
-                            "text" => "*SHA:*\n{$_ENV['GITHUB_SHA']}",
-                        ),
-                    ),
-                ),
-            ),
-    ))
-);
 
-echo "::group::Slack Reponse\n";
-var_dump($response);
-echo "::endgroup::\n";
 
-if(!$response->success) {
-    echo $response->body;
-    exit(1);
-}
+## Inputs
+
+
+
+### `token`
+
+
+
+**Required** Github Token.
+
+
+
+### `title`
+
+
+
+**Required** Issue title.
+
+
+
+### `body`
+
+
+
+Issue body.
+
+
+
+### `assignees`
+
+
+
+Issue assignees. Passed as a formatted multi-line string using the | character.
+
+
+
+## Outputs
+
+
+
+### `issue`
+
+
+
+The issue object as a json string.
+
+
+
+## Example usage
+
+
+
+```yaml
+
+uses: SnehaDavari/issue-action@v1
+
+with:
+
+  token: ${{ secrets.GITHUB_TOKEN }}
+
+  title: Some Issue Title
+
+  body: Some Issue Body
+
+  assignees: |
+
+    SnehaDavari
+
+```
